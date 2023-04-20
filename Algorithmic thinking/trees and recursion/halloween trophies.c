@@ -136,7 +136,7 @@ int is_empty_stack(stack *s) {
 //   return total;
 // }
 
-// Вычисление общего числаи конфет с помощью рекурсии
+// Вычисление общего числа конфет с помощью рекурсии
 int tree_candy(node *tree) {
   if (!tree->left && !tree->right) {
     return tree->candy;
