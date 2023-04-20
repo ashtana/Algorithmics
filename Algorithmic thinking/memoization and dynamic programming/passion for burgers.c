@@ -42,7 +42,10 @@ int max_v(int v1, int v2) {
         return v2;
 }
 
+unsigned long long total_calls;
+
 int solve_t(int m, int n, int t) {
+    total_calls++;
     if (t == 0) {
         return 0;
     }
@@ -63,6 +66,7 @@ int solve_t(int m, int n, int t) {
 
 void solve(int m, int n, int t) {
     int result, i;
+    total_calls = 0;
     result = solve_t(m, n, t);
     if (result >= 0)
         printf("%d\n", result);
@@ -75,6 +79,7 @@ void solve(int m, int n, int t) {
         }
         printf("%d %d\n", result, t - i);
     }
+    printf("Total calls to solve_t: %llu\n", total_calls);
 }
 
 int main(void) {
