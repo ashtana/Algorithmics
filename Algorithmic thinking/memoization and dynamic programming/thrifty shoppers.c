@@ -62,33 +62,38 @@ double min_v(double v1, double v2) {
 }
 
 double solve_k(int num[], double price[], int num_schemes,
-               double unit_price, int num_items) {
+               double unit_price, int num_items, double memo[]) {
   double best, result;
   int i;
-  if (num_items == 0)
-    return 0;
+  if (memo[num_items] != -1)
+    return memo[num_items];
+  if (num_items == 0) {
+    memo[num_items] = 0;
+    return memo[num_items];
+  }
   else {
     result = solve_k(num, price, num_schemes, unit_price,
-                         num_items - 1);
+                         num_items - 1, memo);
     best = result + unit_price;
     for (i = 0; i < num_schemes; i++)
       if (num_items - num[i] >= 0) {
         result = solve_k(num, price, num_schemes, unit_price,
-                             num_items - num[i]);
+                             num_items - num[i], memo);
         best = min_v(best, result + price[i]);
       }
-        return best;
+        memo[num_items] = best;
+        return memo[num_items];
   }
 }
 
 double solve(int num[], double price[], int num_schemes,
-             double unit_price, int num_items) {
+             double unit_price, int num_items, double memo[]) {
   double best;
   int i;
-  best = solve_k(num, price, num_schemes, unit_price, num_items);
+  best = solve_k(num, price, num_schemes, unit_price, num_items, memo);
   for (i = num_items + 1; i < SIZE; i++)
     best = min_v(best, solve_k(num, price, num_schemes,
-                             unit_price, i));
+                             unit_price, i, memo));
   return best;
 }
 
@@ -109,6 +114,7 @@ int main(void) {
   double unit_price, result;
   int num[MAX_SCHEMES];
   double price[MAX_SCHEMES];
+  double memo[SIZE];
   test_case = 0;
   while (scanf("%lf%d", &unit_price, &num_schemes) != -1) {
     test_case++;
@@ -116,15 +122,15 @@ int main(void) {
       scanf("%d%lf", &num[i], &price[i]);
     scanf(" ");
     printf("Case %d:\n", test_case);
+    for (i = 0; i < SIZE; i++)
+        memo[i] = -1;
     more = get_number(&num_items);
     while (more) {
-      result = solve(num, price, num_schemes, unit_price,
-                     num_items);
+      result = solve(num, price, num_schemes, unit_price, num_items, memo);
       printf("Buy %d for $%.2f\n", num_items, result);
       more = get_number(&num_items);
     }
-    result = solve(num, price, num_schemes, unit_price,
-                   num_items);
+    result = solve(num, price, num_schemes, unit_price, num_items, memo);
     printf("Buy %d for $%.2f\n", num_items, result);
   }
   return 0;
