@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Задача с платформы UV № 10910
+// Задача 4. Учебный план
+// Задача с платформы UV (uva.onlinejudge.org) № 10910
 
 /*
 Условие
