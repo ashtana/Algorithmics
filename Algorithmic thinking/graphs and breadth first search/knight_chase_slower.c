@@ -67,18 +67,28 @@
 Время на решение тестовых примеров — две секунды.
 */
 
+#define MAX_ROWS 99
+#define MAX_COLS 99
+
 typedef struct position { 
   int row, col;
 } position;
 
-#define MAX_ROWS 99
-#define MAX_COLS 99
 
 typedef int board[MAX_ROWS + 1][MAX_COLS + 1];
 typedef position positions[MAX_ROWS * MAX_COLS];
 
-int find_distance(int knight_row, int knight_col, int dest_row, 
-int dest_col, int num_rows, int num_cols) {
+void add_position(int from_row, int from_col, int to_row, int to_col, int num_rows, int num_cols, positions new_positions, int *num_new_positions, board min_moves) {
+    struct position new_position;
+    if (to_row >= 1 && to_col >= 1 && to_row <= num_rows && to_col <= num_cols && min_moves[to_row][to_col] == -1) {
+        min_moves[to_row][to_col] = 1 + min_moves[from_row][from_col];
+        new_position = (position){to_row, to_col};
+        new_positions[*num_new_positions] = new_position;
+        (*num_new_positions)++;
+    }
+}
+
+int find_distance(int knight_row, int knight_col, int dest_row, int dest_col, int num_rows, int num_cols) {
     positions cur_positions, new_positions;
     int num_cur_positions, num_new_positions;
     int i, j, from_row, from_col;
@@ -100,22 +110,14 @@ int dest_col, int num_rows, int num_cols) {
             if (from_row == dest_row && from_col == dest_col) {
                 return min_moves[dest_row][dest_col];
             }
-            add_position(from_row, from_col, from_row + 1, from_col + 2, 
-            num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row + 1, from_col - 2, 
-            num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row - 1, from_col + 2, 
-            num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row - 1, from_col - 2, 
-            num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row + 2, from_col + 1, 
-            num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row + 2, from_col - 1, 
-            num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row - 2, from_col + 1, 
-            num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row - 2, from_col - 1, 
-            num_rows, num_cols, new_positions, &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row + 1, from_col + 2, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row + 1, from_col - 2, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row - 1, from_col + 2, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row - 1, from_col - 2, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row + 2, from_col + 1, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row + 2, from_col - 1, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row - 2, from_col + 1, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row - 2, from_col - 1, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
         }
         num_cur_positions = num_new_positions;
         for (i = 0; i < num_cur_positions; i++) {
@@ -123,17 +125,6 @@ int dest_col, int num_rows, int num_cols) {
         }
     }
     return -1;
-}
-
-void add_position(int from_row, int from_col, int to_row, int to_col, int num_rows, int num_cols, positions new_positions, int *num_new_positions, board min_moves) {
-    struct position new_position;
-    if (to_row >= 1 && to_col >= 1 && to_row <= num_rows && 
-    to_col <= num_cols && min_moves[to_row][to_col] == -1) {
-        min_moves[to_row][to_col] = 1 + min_moves[from_row][from_col];
-        new_position = (position){to_row, to_col};
-        new_positions[*num_new_positions] = new_position;
-        (*num_new_positions)++;
-    }
 }
 
 void solve(int pawn_row, int pawn_col, int knight_row, int knight_col, int num_rows, int num_cols) {

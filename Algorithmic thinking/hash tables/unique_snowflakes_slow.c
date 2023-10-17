@@ -35,6 +35,8 @@
 Время выполнения вычислений ограничено двумя секундами.
 */
 
+#define SIZE 100000
+
 // Определение идентичности снежинок перемещением вправо с вычислением остатка
 int identical_right(int snow1[], int snow2[], int start) {
     int offset, snow2_index;
@@ -81,7 +83,6 @@ void identify_identical(int snowflakes[][6], int n) {
     printf("No two snowflakes are alike.\n");
 }
 
-#define SIZE 100000
 int main(void) {
     static int snowflakes[SIZE][6];
     int n, i, j;

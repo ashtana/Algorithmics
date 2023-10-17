@@ -50,6 +50,8 @@ abcdxxef
 так как отсчет идет от единицы, а не от нуля.
 */
 
+#define SIZE 1000000
+
 // Вычисление самого длинного общего префикса
 int prefix_length(char s1[], char s2[]) {
     int i = 1;
@@ -65,8 +67,6 @@ int suffix_length(char s1[], char s2[], int len) {
         i--;
     return len - i;
 }
-
-#define SIZE 1000000
 
 int main(void) {
     static char s1[SIZE + 2], s2[SIZE + 2]; // задаёт размер двухсимвольных массивов
