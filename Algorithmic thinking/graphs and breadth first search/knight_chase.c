@@ -88,11 +88,11 @@ void add_position(int from_row, int from_col, int to_row, int to_col, int num_ro
     }
 }
 
-int find_distance(int knight_row, int knight_col, int dest_row, int dest_col, int num_rows, int num_cols) {
+// int find_distance(int knight_row, int knight_col, int dest_row, int dest_col, int num_rows, int num_cols) {
+void find_distances(int knight_row, int knight_col, int num_rows, int num_cols, board min_moves) {
     positions cur_positions, new_positions;
     int num_cur_positions, num_new_positions;
     int i, j, from_row, from_col;
-    board min_moves;
     for (i = 1; i <= num_rows; i++) {
         for (j = 1; j <= num_cols; j++) {
             min_moves[i][j] = -1;
@@ -107,32 +107,49 @@ int find_distance(int knight_row, int knight_col, int dest_row, int dest_col, in
         for (i = 0; i < num_cur_positions; i++) { 
             from_row = cur_positions[i].row;
             from_col = cur_positions[i].col;
-            if (from_row == dest_row && from_col == dest_col) {
-                return min_moves[dest_row][dest_col];
-            }
-            add_position(from_row, from_col, from_row + 1, from_col + 2, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row + 1, from_col - 2, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row - 1, from_col + 2, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row - 1, from_col - 2, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row + 2, from_col + 1, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row + 2, from_col - 1, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row - 2, from_col + 1, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
-            add_position(from_row, from_col, from_row - 2, from_col - 1, num_rows, num_cols, new_positions, &num_new_positions, min_moves);
+            // if (from_row == dest_row && from_col == dest_col) {
+            //     return min_moves[dest_row][dest_col];
+            // }
+            add_position(from_row, from_col, from_row + 1, from_col + 2,
+                   num_rows, num_cols, new_positions,
+                   &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row + 1, from_col - 2,
+                        num_rows, num_cols, new_positions,
+                        &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row - 1, from_col + 2,
+                        num_rows, num_cols, new_positions,
+                        &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row - 1, from_col - 2,
+                        num_rows, num_cols, new_positions,
+                        &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row + 2, from_col + 1,
+                        num_rows, num_cols, new_positions,
+                        &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row + 2, from_col - 1,
+                        num_rows, num_cols, new_positions,
+                        &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row - 2, from_col + 1,
+                        num_rows, num_cols, new_positions,
+                        &num_new_positions, min_moves);
+            add_position(from_row, from_col, from_row - 2, from_col - 1,
+                        num_rows, num_cols, new_positions,
+                        &num_new_positions, min_moves);
         }
         num_cur_positions = num_new_positions;
         for (i = 0; i < num_cur_positions; i++) {
             cur_positions[i] = new_positions[i];
         }
     }
-    return -1;
 }
 
-void solve(int pawn_row, int pawn_col, int knight_row, int knight_col, int num_rows, int num_cols) {
+// void solve(int pawn_row, int pawn_col, int knight_row, int knight_col, int num_rows, int num_cols) {
+void solve(int pawn_row, int pawn_col, int num_rows, board min_moves) {
     int cur_pawn_row, num_moves, knight_takes;
     cur_pawn_row = pawn_row;
     num_moves = 0;
     while (cur_pawn_row < num_rows) {
-        knight_takes = find_distance(knight_row, knight_col, cur_pawn_row, pawn_col, num_rows, num_cols);
+        // knight_takes = find_distance(knight_row, knight_col, cur_pawn_row, pawn_col, num_rows, num_cols);
+        knight_takes = min_moves[cur_pawn_row][pawn_col];
     // if (knight_takes == num_moves) {
     if (knight_takes >= 0 && num_moves >= knight_takes && (num_moves - knight_takes) % 2 == 0) {
       printf("Win in %d knight move(s).\n", num_moves);
@@ -144,7 +161,8 @@ void solve(int pawn_row, int pawn_col, int knight_row, int knight_col, int num_r
     cur_pawn_row = pawn_row;
     num_moves = 0;
     while (cur_pawn_row < num_rows) {
-        knight_takes = find_distance(knight_row, knight_col, cur_pawn_row + 1, pawn_col, num_rows, num_cols);
+        // knight_takes = find_distance(knight_row, knight_col, cur_pawn_row + 1, pawn_col, num_rows, num_cols);
+        knight_takes = min_moves[cur_pawn_row + 1][pawn_col];
         // if (knight_takes == num_moves) {
         if (knight_takes >= 0 && num_moves >= knight_takes && (num_moves - knight_takes) % 2 == 0) {
             printf("Stalemate in %d knight move(s).\n", num_moves);
@@ -159,12 +177,15 @@ void solve(int pawn_row, int pawn_col, int knight_row, int knight_col, int num_r
 int main(void) {
     int num_cases, i;
     int num_rows, num_cols, pawn_row, pawn_col, knight_row, knight_col;
+    board min_moves;
     scanf("%d", &num_cases);
     for (i = 0; i < num_cases; i++) {
         scanf("%d%d", &num_rows, &num_cols);
         scanf("%d%d", &pawn_row, &pawn_col);
         scanf("%d%d", &knight_row, &knight_col);
-        solve(pawn_row, pawn_col, knight_row, knight_col, num_rows, num_cols);
+        // solve(pawn_row, pawn_col, knight_row, knight_col, num_rows, num_cols);
+        find_distances(knight_row, knight_col, num_rows, num_cols, min_moves);
+        solve(pawn_row, pawn_col, num_rows, min_moves);
     }
     return 0;
 }
