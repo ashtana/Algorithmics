@@ -136,3 +136,50 @@ constexpr double square(double x) {return x*x;}
 */
 
 // §2.2.4 Операторы выбора и циклы
+// Пример функции, которая запрашивает ввод у пользователя и возвращает булевское значение,
+// отражающее введённое значение
+bool accept() {
+    cout << "Do you want to proceed (y or n)?\n"; // вывести вопрос (\n §2.2.1)
+    char answer = 0;
+    cin >> answer;  // считать ответ
+    if (answer == 'y') return true;
+    return false;
+}
+
+// улучшенный пример функции со switch
+bool accept2() {
+    cout << "Do you wanr to proceed (y or n)? \n"; // написать вопрос
+    char answer = 0;
+    cin >> answer; // прочитать ответ
+    switch(answer) {
+        case 'y':
+            return true;
+        case 'n':
+            return false;
+        default:
+            cout << "I'll take that for a no.\n";
+            return false;
+    }
+}
+
+// вариант с добавлением while - цикл который выполняется до тех пор пока условие истина
+bool accept3() {
+    int tries = 1;
+    while (tries<4) {
+        cout << "Do you wanr to proceed (y or n)? \n"; // написать вопрос
+        char answer = 0;
+        cin >> answer; // прочитать ответ
+        switch(answer) {
+            case 'y':
+                return true;
+            case 'n':
+                return false;
+            default:
+                cout << "Sorry, I don't understand that.\n";
+                return false;
+        }
+        ++tries; // инкремент (§2.2.2)
+    }
+    cout << "I'll take that for a no.\n";
+    return false;
+}
